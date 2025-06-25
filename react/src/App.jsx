@@ -2,7 +2,8 @@ import Sock from "./components/Sock";
 import sock_data from './assets/sock.json';
 import Footer from "./components/Footer";
 import Search from "./components/Search"
-
+import FeaturedContainer from "./components/FeaturedContainer";
+import promo_data from "./assets/promo.json"
 
 function App() {
   return (
@@ -82,8 +83,14 @@ navigation"
           <div className="row">
             Both socks and space rockets will take you to new heights, but only
             one will get cold feet!
-            <div className="card-container">
-              <Sock data={sock_data} />
+            < FeaturedContainer props={promo_data}  />
+            <div className="card-container" style={{ display: 'flex', flexWrap: 'wrap', gap:'20px' }}>
+              {
+                sock_data.map((sock) => (
+                <Sock key={sock.id} data={sock} />
+                ))
+              }
+
             </div>
             <Footer environment={"DEVELOPMENT"} />
           </div>
