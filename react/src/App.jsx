@@ -4,8 +4,51 @@ import Footer from "./components/Footer";
 import Search from "./components/Search"
 import FeaturedContainer from "./components/FeaturedContainer";
 import promo_data from "./assets/promo.json"
+import React, { useState, useEffect } from "react";
+
 
 function App() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(import.meta.env.VITE_SOCKS_API_URL);
+        if (!response.ok) {
+          throw new Error("Data could not be fetched!");
+        }
+        const json_response = await response.json();
+        setData(json_response); // assign JSON response to the data variable.
+      } catch (error) {
+        console.error("Error fetching socks:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleDelete = async (sockId) => {
+    try {
+      console.log({sockId})
+      // Make an API request to delete the sock with the given sockId
+      const response = await fetch(
+        `${import.meta.env.VITE_SOCKS_API_URL}/$
+  {sockId}`,
+        {
+          method: "DELETE",
+        },
+      );
+      if (!response.ok) {
+        throw new Error("Sock could not be deleted!");
+      }
+      // Update the state or fetch the updated data from the server
+      const updatedData = data.filter((sock) => sock._id !== sockId); // Removethe deleted sock from the data array
+      setData(updatedData); // Update the state with the updated data
+    } catch (error) {
+      console.error("Error deleting sock:", error);
+    }
+  };
+  
+  
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -74,7 +117,8 @@ navigation"
                 </a>
               </li>
             </ul>
-            <Search />
+            <Search setData={setData} />
+
           </div>
         </div>
       </nav>
@@ -86,13 +130,15 @@ navigation"
             < FeaturedContainer props={promo_data}  />
             <div className="card-container" style={{ display: 'flex', flexWrap: 'wrap', gap:'20px' }}>
               {
-                sock_data.map((sock) => (
-                <Sock key={sock.id} data={sock} />
+               data.map((sock) => (
+                <Sock key={sock._id} data={sock} handleDelete={handleDelete} />
                 ))
               }
+                
+              
 
             </div>
-            <Footer environment={"DEVELOPMENT"} />
+            <Footer environment={import.meta.env.VITE_ENVIRONMENT} />
           </div>
         </div>
       </main>
