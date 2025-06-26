@@ -31,8 +31,7 @@ function App() {
       console.log({sockId})
       // Make an API request to delete the sock with the given sockId
       const response = await fetch(
-        `${import.meta.env.VITE_SOCKS_API_URL}/$
-  {sockId}`,
+        `${import.meta.env.VITE_SOCKS_API_URL}/${sockId}`,
         {
           method: "DELETE",
         },
