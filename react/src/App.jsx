@@ -30,9 +30,29 @@ function App() {
     fetchData();
   }, []);
 
+  const handleAdd = async () => {
+    try {
+      //console.log({sockId})
+      // Make an API request to delete the sock with the given sockId
+      const response = await fetch(
+        `${import.meta.env.VITE_SOCKS_API_URL}/socks`,
+        {
+          method: "POST",
+        },
+      );
+      if (!response.ok) {
+        throw new Error("Sock could not be added!");
+      }
+      
+    }
+    catch (error) {
+      console.error("Error adding sock:", error);
+    }
+  }
+
   const handleDelete = async (sockId) => {
     try {
-      console.log({sockId})
+      //console.log({sockId})
       // Make an API request to delete the sock with the given sockId
       const response = await fetch(
         `${import.meta.env.VITE_SOCKS_API_URL}/${sockId}`,
