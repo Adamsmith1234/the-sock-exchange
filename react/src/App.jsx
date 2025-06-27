@@ -9,6 +9,9 @@ import Home from "./components/Home";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import About from "./components/About"
 import AddSock from "./components/AddSock"
+import { AuthProvider } from "./hooks/AuthContext";
+import RequireAuth from "./components/RequireAuth";
+import LoginForm from "./components/LoginForm";
 
 
 function App() {
@@ -160,16 +163,23 @@ navigation"
             < Featured props={promo_data}  />
             <div className="card-container" style={{ display: 'flex', flexWrap: 'wrap', gap:'20px' }}>
             </div>
-            <Routes>
+            <AuthProvider>
+              <Routes>
               <Route
                 exact
                 path="/"
                 element={<Home data={data} handleDelete={handleDelete} />}
               />
               <Route path="/about" element={<About />} />
-              <Route path="/addSock" element={<AddSock />} />
+              <Route path="/addSock" element={<RequireAuth>
+               <AddSock /> 
+              </RequireAuth>} />
+
+              <Route path = "/Login" element= {<LoginForm />} />
               
             </Routes>;
+            </AuthProvider>
+           
 
             <Footer environment={import.meta.env.VITE_ENVIRONMENT} />
           </div>
