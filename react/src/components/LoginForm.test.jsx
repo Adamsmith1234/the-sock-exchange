@@ -9,10 +9,15 @@ import "@testing-library/jest-dom";
 jest.mock("../hooks/AuthContext", () => ({
   useAuth: () => ({ login: jest.fn().mockResolvedValue("Logged In") }),
 }));
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: jest.fn(),
+}));
 const navigate = jest.fn();
 beforeEach(() => {
-  jest.spyOn(router, "useNavigate").mockImplementation(() => navigate);
-});
+    // Mock implementation for useNavigate
+    require('react-router-dom').useNavigate.mockImplementation(() => navigate);
+  });
 describe("LoginForm Component", () => {
   test("renders correctly", () => {
     render(<LoginForm />, { wrapper: BrowserRouter });
@@ -32,6 +37,6 @@ describe("LoginForm Component", () => {
     await userEvent.type(screen.getByLabelText(/username/i), "testuser");
     await userEvent.type(screen.getByLabelText(/password/i), "password");
     await fireEvent.submit(screen.getByRole("button", { name: /login/i }));
-    expect(navigate).toHaveBeenCalledWith("/add");
+    expect(navigate).toHaveBeenCalledWith("/addSock");
   });
 });
